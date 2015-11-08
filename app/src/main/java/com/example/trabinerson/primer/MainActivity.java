@@ -26,11 +26,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int[] PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23};
     private static final int MAX_PROGRESS = 100;
+    private static final int LEVEL_TIME_MSECS = 10000;
+    private static final int LEVEL_INTERVAL_TIME_MSECS = 5;
 
     private ViewHolder mViewHolder;
     private CountDownTimer mCountDownTimer;
     private Animation.AnimationListener mErrorListener;
     private Animation.AnimationListener mLevelWinListener;
+    private boolean mGameActive = false;
     private int mCurrentLevel = 1;
 
     @Override
@@ -79,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onPrimeClick(View view) {
+        if (!mGameActive) {
+            return;
+        }
         CharSequence currentNumberStr = mViewHolder.mToFactor.getText();
         CharSequence buttonValueStr = ((Button)view).getText();
         int currentNumber = Integer.parseInt(currentNumberStr.toString());
@@ -96,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStartClick(View view) {
+        mGameActive = true;
         mViewHolder.mLoseFrame.setVisibility(View.INVISIBLE);
         mViewHolder.mLevel.setText("Level " + mCurrentLevel);
         randomizeValues(mCurrentLevel);
@@ -105,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void finishLevel(boolean setStartButtonText) {
+        mGameActive = false;
         mCurrentLevel++;
         mViewHolder.mLevel.setText("");
         if (setStartButtonText) {
@@ -123,12 +131,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void startClock() {
 
-        final double totalTime = 10000;
-        final double intervalTime = 5;
-        mCountDownTimer = new CountDownTimer((int)totalTime, (int)intervalTime) {
+        mCountDownTimer = new CountDownTimer(LEVEL_TIME_MSECS, LEVEL_INTERVAL_TIME_MSECS) {
             @Override
             public void onTick(long millisUntilFinished) {
-                int currentProgress = (int)(MAX_PROGRESS * (millisUntilFinished / totalTime));
+                int currentProgress = (int)(MAX_PROGRESS * (millisUntilFinished / (long)LEVEL_TIME_MSECS));
                 mViewHolder.mProgressBar.setProgress(currentProgress);
             }
 
@@ -181,14 +187,6 @@ public class MainActivity extends AppCompatActivity {
         int prime3 = chosenPrimes.get(2);
         int prime4 = chosenPrimes.get(3);
         int prime5 = chosenPrimes.get(4);
-
-        // TODO randomize
-//        int prime1 = 2;
-//        int prime2 = 3;
-//        int prime3 = 5;
-//        int prime4 = 7;
-//        int prime5 = 11;
-//        int toFactor = 2 * 7 * 11;
 
         // Set values on screen
         mViewHolder.mPrime1.setText(Integer.toString(prime1));
