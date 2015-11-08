@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 mViewHolder.mBalloon1.setVisibility(View.GONE);
                 mViewHolder.mBalloon2.setVisibility(View.GONE);
                 mViewHolder.mBalloon3.setVisibility(View.GONE);
-                finishLevel(true);
             }
 
             @Override
@@ -120,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStartClick(View view) {
+        mViewHolder.mToFactor.clearAnimation();
         mGameActive = true;
         mViewHolder.mLoseFrame.setVisibility(View.INVISIBLE);
         mViewHolder.mLevel.setText("Level " + mCurrentLevel);
@@ -314,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void winLevel() {
         mCountDownTimer.cancel();
+        finishLevel(true);
         animateWin();
     }
 
