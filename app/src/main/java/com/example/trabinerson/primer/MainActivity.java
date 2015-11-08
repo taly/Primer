@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Randomize primes
-        // TODO randomize lower primes in lower levels
         Collections.shuffle(primes);
         ArrayList<Integer> chosenPrimes = new ArrayList<>(numPrimes);
         for (int k = 0; k < numPrimes; k++) {
@@ -190,11 +189,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Choose primes to use for number
         Random random = new Random();
-        int numFactors = level + 2;
+        int numFactors = (int)(level / 2.) + 2;
         ArrayList<Integer> participatingPrimes = new ArrayList<>(numFactors);
         for (int k = 0; k < numFactors; k++) {
-            i = random.nextInt(numPrimes);
-            participatingPrimes.add(k, chosenPrimes.get(i));
+            int r = random.nextInt(numPrimes);
+            participatingPrimes.add(k, chosenPrimes.get(r));
         }
 
         // Set our number!
