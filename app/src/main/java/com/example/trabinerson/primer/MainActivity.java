@@ -26,9 +26,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int[] PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23};
     private static final int MAX_PROGRESS = 100;
-    private static final int PROGRESS_ERROR_PENALTY_PERCENT = 10;
+    private static final int MAX_POSSIBLE_TO_FACTOR = 50000;
+    private static final int PROGRESS_ERROR_PENALTY_PERCENT = 13;
     private static final int LEVEL_TIME_MSECS = 10000;
     private static final int LEVEL_INTERVAL_TIME_MSECS = 5;
+    private static final int FIRST_LARGE_PRIME = 13;
 
     private ViewHolder mViewHolder;
     private CountDownTimer mCountDownTimer;
@@ -187,19 +189,36 @@ public class MainActivity extends AppCompatActivity {
             chosenPrimes.add(k, primes.get(k));
         }
 
-        // Choose primes to use for number
+        // Make sure either 2 or 3 are chosen
+        int smallest;
         Random random = new Random();
-        int numFactors = (int)(level / 2.) + 2;
-        ArrayList<Integer> participatingPrimes = new ArrayList<>(numFactors);
-        for (int k = 0; k < numFactors; k++) {
-            int r = random.nextInt(numPrimes);
-            participatingPrimes.add(k, chosenPrimes.get(r));
+        if (chosenPrimes.contains(2)) {
+            smallest = 2;
+        }
+        else if (chosenPrimes.contains(3)) {
+            smallest = 3;
+        }
+        else {
+            smallest = 2;
+            if (random.nextBoolean()) {
+                smallest++;
+            }
+            chosenPrimes.add(0, smallest);
+            chosenPrimes.remove(chosenPrimes.size() - 1);
         }
 
-        // Set our number!
+        // Choose primes to use for number
+        int numFactors = (int)(level / 2.) + 2;
+        ArrayList<Integer> participatingPrimes = new ArrayList<>(numFactors);
+        int numLargeChosen = 0;
         int toFactor = 1;
-        for (int p : participatingPrimes) {
-            toFactor *= p;
+        for (int k = 0; k < numFactors; k++) {
+            int prime = chooseNextPrime(random, numPrimes, chosenPrimes, smallest, toFactor, level, numLargeChosen);
+            if (prime >= FIRST_LARGE_PRIME) {
+                numLargeChosen++;
+            }
+            participatingPrimes.add(k, prime);
+            toFactor *= prime;
         }
 
         // Set primes
@@ -217,6 +236,43 @@ public class MainActivity extends AppCompatActivity {
         mViewHolder.mPrime4.setText(Integer.toString(prime4));
         mViewHolder.mPrime5.setText(Integer.toString(prime5));
         mViewHolder.mToFactor.setText(Integer.toString(toFactor));
+    }
+
+    private static int chooseNextPrime(
+            Random random, int numPrimes, ArrayList<Integer> chosenPrimes,
+            int smallest, int currentProduct, int level, int numLargeChosen) {
+
+        // Try to randomize a good prime
+        int maxTrials = 500;
+        int numTrials = 0;
+        int prime;
+        do {
+            int r = random.nextInt(numPrimes);
+            prime = chosenPrimes.get(r);
+            if (isPrimeKosher(prime, level, numLargeChosen, currentProduct)) {
+                return prime;
+            }
+            numTrials++;
+        }
+        while (numTrials < maxTrials);
+
+        // OK, all primes suck
+        return smallest;
+    }
+
+    private static boolean isPrimeKosher(int prime, int level, int numLargeChosen, int currentProduct) {
+        return !isPrimeTooLarge(prime, level, numLargeChosen) && !doesPrimeExceedMax(prime, currentProduct);
+    }
+
+    private static boolean isPrimeTooLarge(int prime, int level, int numLargeChosen) {
+        if (prime < FIRST_LARGE_PRIME) {
+            return false;
+        }
+        return (numLargeChosen > 0 && level < 10) || (numLargeChosen > 1 && level < 20);
+    }
+
+    private static boolean doesPrimeExceedMax(int prime, int currentProduct) {
+        return prime * currentProduct >= MAX_POSSIBLE_TO_FACTOR;
     }
 
     private void animateError() {
