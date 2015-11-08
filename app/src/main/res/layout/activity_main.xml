@@ -1,0 +1,187 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30dp"
+            android:text=""
+            android:id="@+id/textview_level"
+            android:layout_gravity="center_horizontal" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:text="2"
+                    android:id="@+id/prime1"
+                    android:onClick="onPrimeClick"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:text="3"
+                    android:id="@+id/prime2"
+                    android:onClick="onPrimeClick"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:text="5"
+                    android:id="@+id/prime3"
+                    android:onClick="onPrimeClick"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:text="7"
+                    android:id="@+id/prime4"
+                    android:onClick="onPrimeClick"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:text="11"
+                    android:id="@+id/prime5"
+                    android:onClick="onPrimeClick"/>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    tools:text="34"
+                    android:id="@+id/to_factor"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="70dp" />
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/error_view"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:tint="#ff0000"
+                    android:visibility="invisible"
+                    android:src="@drawable/rage_error"/>
+
+            </FrameLayout>
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+
+            <Button
+                android:id="@+id/button_start"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Start Level 1"
+                android:textSize="24dp"
+                android:onClick="onStartClick"/>
+
+            <ProgressBar
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress_bar"
+                android:max="100"
+                android:progress="100"
+                android:layout_gravity="center"
+                android:visibility="invisible"/>
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="160dp"
+        android:id="@+id/ballon1" android:src="@drawable/balloon"
+        android:layout_gravity="bottom"
+        android:visibility="invisible"
+        android:tint="#00ff00"
+        android:alpha="0.5" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="200dp"
+        android:id="@+id/ballon2"
+        android:src="@drawable/balloon"
+        android:visibility="invisible"
+        android:layout_gravity="center_horizontal|bottom"
+        android:tint="#ff0000"
+        android:alpha="0.5"/>
+
+    <ImageView
+        android:layout_width="90dp"
+        android:layout_height="160dp"
+        android:id="@+id/ballon3"
+        android:visibility="invisible"
+        android:src="@drawable/balloon"
+        android:layout_gravity="center_horizontal|bottom|right"
+        android:tint="#0000ff"
+        android:alpha="0.5"/>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/grumpy"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="373dp"
+            android:layout_height="373dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/grumpycat"
+            android:layout_gravity="center"
+            android:text="NO"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YOU HAVE LOST."
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30dp"
+            android:paddingBottom="40dp"
+            android:layout_gravity="center_horizontal|bottom" />
+
+    </FrameLayout>
+
+</FrameLayout>
+
