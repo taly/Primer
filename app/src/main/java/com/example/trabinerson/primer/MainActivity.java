@@ -285,6 +285,7 @@ public class MainActivity extends AppCompatActivity {
     private void loseGame() {
         mCurrentLevel = 0;
         mCountDownTimer.cancel();
+        finishLevel(false);
         animateLose();
     }
 
@@ -300,7 +301,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                finishLevel(false);
                 mViewHolder.mStart.setText("Restart");
             }
 
