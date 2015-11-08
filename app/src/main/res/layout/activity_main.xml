@@ -81,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    tools:text="34"
+                    tools:text="999999"
                     android:id="@+id/to_factor"
                     android:layout_gravity="center"
                     android:gravity="center"

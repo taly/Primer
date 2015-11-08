@@ -168,11 +168,16 @@ public class MainActivity extends AppCompatActivity {
 
         int numPrimes = 5;
 
+        // Set max possible prime by level
+        int maxPrimeIndex = PRIMES.length - 1;
+        if (level <= PRIMES.length - numPrimes + 1) {
+            maxPrimeIndex = numPrimes + level - 2;
+        }
+
         // Get ArrayList of primes - bah java
-        ArrayList<Integer> primes = new ArrayList<>(PRIMES.length);
-        int i = 0;
-        for (int prime : PRIMES) {
-            primes.add(i++, prime);
+        ArrayList<Integer> primes = new ArrayList<>(maxPrimeIndex + 1);
+        for (int i = 0; i <= maxPrimeIndex; i++) {
+            primes.add(i, PRIMES[i]);
         }
 
         // Randomize primes
