@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int[] PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23};
     private static final int MAX_PROGRESS = 100;
+    private static final int PROGRESS_ERROR_PENALTY_PERCENT = 10;
     private static final int LEVEL_TIME_MSECS = 10000;
     private static final int LEVEL_INTERVAL_TIME_MSECS = 5;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer mCountDownTimer;
     private Animation.AnimationListener mErrorListener;
     private Animation.AnimationListener mLevelWinListener;
+    private long mTimeRemaining = -1;
     private boolean mGameActive = false;
     private int mCurrentLevel = 1;
 
@@ -90,14 +92,28 @@ public class MainActivity extends AppCompatActivity {
         int currentNumber = Integer.parseInt(currentNumberStr.toString());
         int buttonValue = Integer.parseInt(buttonValueStr.toString());
         double result = ((double)currentNumber) / ((double)buttonValue);
-        if (result == (int)result) {
+
+        if (result == (int)result) { // Correct prime
             mViewHolder.mToFactor.setText(Integer.toString((int)result));
             if (result == 1) {
                 winLevel();
             }
         }
-        else {
-            animateError();
+        else { // Incorrect prime
+            int currentProgress = mViewHolder.mProgressBar.getProgress();
+            int progressPenalty = (int)((double)MAX_PROGRESS * ((double)PROGRESS_ERROR_PENALTY_PERCENT/100.));
+            int timePenalty = (int)((double)LEVEL_TIME_MSECS * ((double)PROGRESS_ERROR_PENALTY_PERCENT/100.));
+            if (currentProgress > progressPenalty) {
+                mCountDownTimer.cancel();
+                int newProgress = currentProgress - progressPenalty;
+                mViewHolder.mProgressBar.setProgress(newProgress);
+                long newTime = mTimeRemaining - timePenalty;
+                startClock(newTime);
+                animateError();
+            }
+            else {
+                loseGame();
+            }
         }
     }
 
@@ -108,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         randomizeValues(mCurrentLevel);
         mViewHolder.mStart.setVisibility(View.INVISIBLE);
         mViewHolder.mProgressBar.setVisibility(View.VISIBLE);
-        startClock();
+        startClock(LEVEL_TIME_MSECS);
     }
 
     private void finishLevel(boolean setStartButtonText) {
@@ -129,17 +145,19 @@ public class MainActivity extends AppCompatActivity {
         mViewHolder.mToFactor.setText("");
     }
 
-    private void startClock() {
+    private void startClock(final long startTime) {
 
-        mCountDownTimer = new CountDownTimer(LEVEL_TIME_MSECS, LEVEL_INTERVAL_TIME_MSECS) {
+        mCountDownTimer = new CountDownTimer(startTime, LEVEL_INTERVAL_TIME_MSECS) {
             @Override
             public void onTick(long millisUntilFinished) {
-                int currentProgress = (int)(MAX_PROGRESS * (millisUntilFinished / (long)LEVEL_TIME_MSECS));
+                mTimeRemaining = millisUntilFinished;
+                int currentProgress = (int)(MAX_PROGRESS * (millisUntilFinished / (double)LEVEL_TIME_MSECS));
                 mViewHolder.mProgressBar.setProgress(currentProgress);
             }
 
             @Override
             public void onFinish() {
+                mTimeRemaining = -1;
                 loseGame();
             }
         };
