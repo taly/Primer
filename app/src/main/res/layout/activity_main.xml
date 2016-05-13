@@ -177,9 +177,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center"
-            android:background="@color/helpBubbleColor"
+            android:background="@drawable/help_bubble"
             android:padding="8dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             tools:visibility="visible">
             <TextView
                 android:layout_width="match_parent"
@@ -188,22 +188,18 @@
                 android:textSize="30sp"
                 android:text="How to Play"/>
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:text="Each prime you click on the left will divide the center number by that number."/>
+                style="@style/HelpBubbleText"
+                android:text="@string/help_p1"/>
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:text="If the center number is not divisible by that prime, you will get a time penalty!"/>
+                style="@style/HelpBubbleText"
+                android:text="@string/help_p2"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Got it"
+                android:background="@color/helpButtonColor"
+                android:layout_marginTop="7dp"
+                android:text="@string/help_button"
                 android:onClick="onHideHelp"/>
         </LinearLayout>
 

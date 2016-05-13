@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Primer</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="help_title">How to Play</string>
+    <string name="help_p1">Each prime you click on the left will divide the center number by that number.</string>
+    <string name="help_p2">If the center number is not divisible by that prime, you will get a time penalty!</string>
+    <string name="help_button">Got it</string>
 </resources>

@@ -50,7 +50,6 @@
                     <corners android:radius="5dip" />
                     <stroke android:width="1dip" android:color="@color/primeButtonStroke" />
                     <solid android:color="@color/primeButton2" />
-
                 </shape>
             </item>
         </layer-list>

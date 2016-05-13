@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationRepeat(Animation animation) { }
         };
 
+        disablePrimeButtons();
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
     }
@@ -106,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             case R.id.action_help: {
-                setHelpVisibility(true);
+                View helpBubble = findViewById(R.id.help_bubble);
+                setHelpVisibility(!(helpBubble.getVisibility() == View.VISIBLE));
                 return true;
             }
 
@@ -151,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStartClick(View view) {
+        setHelpVisibility(false);
         mViewHolder.mToFactor.clearAnimation();
         mGameActive = true;
         mViewHolder.mLoseFrame.setVisibility(View.INVISIBLE);
@@ -173,11 +177,44 @@ public class MainActivity extends AppCompatActivity {
         setHelpVisibility(false);
     }
 
-    private void setHelpVisibility(boolean visible) {
-        findViewById(R.id.help_bubble).setVisibility(visible ? View.VISIBLE : View.GONE);
+    private void setHelpVisibility(final boolean visible) {
+        if ((visible && mViewHolder.mHelpBubble.getVisibility() == View.VISIBLE) ||
+                (!visible && mViewHolder.mHelpBubble.getVisibility() == View.INVISIBLE)) {
+            return;
+        }
+
+        float fromX = visible ? 0 : 1;
+        float toX = visible ? 1 : 0;
+        float fromY = visible ? 0 : 1;
+        float toY = visible ? 1 : 0;
+
+        Animation helpAnimation = new ScaleAnimation(fromX, toX, fromY, toY, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        helpAnimation.setDuration(300);
+        helpAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if (visible) {
+                    mViewHolder.mHelpBubble.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (!visible) {
+                    mViewHolder.mHelpBubble.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mViewHolder.mHelpBubble.startAnimation(helpAnimation);
     }
 
     private void finishLevel(boolean setStartButtonText) {
+        setHelpVisibility(false);
         mGameActive = false;
         mCurrentLevel++;
         mViewHolder.mLevel.setText("");
@@ -187,12 +224,22 @@ public class MainActivity extends AppCompatActivity {
         mViewHolder.mStart.setVisibility(View.VISIBLE);
         mViewHolder.mProgressBar.setVisibility(View.INVISIBLE);
         mViewHolder.mProgressBar.setProgress(MAX_PROGRESS);
+        mViewHolder.mToFactor.setText("");
+        disablePrimeButtons();
+    }
+
+    private void disablePrimeButtons() {
         mViewHolder.mPrime1.setText("");
         mViewHolder.mPrime2.setText("");
         mViewHolder.mPrime3.setText("");
         mViewHolder.mPrime4.setText("");
         mViewHolder.mPrime5.setText("");
-        mViewHolder.mToFactor.setText("");
+
+        mViewHolder.mPrime1.setEnabled(false);
+        mViewHolder.mPrime2.setEnabled(false);
+        mViewHolder.mPrime3.setEnabled(false);
+        mViewHolder.mPrime4.setEnabled(false);
+        mViewHolder.mPrime5.setEnabled(false);
     }
 
     private void startClock(final long startTime) {
@@ -284,6 +331,13 @@ public class MainActivity extends AppCompatActivity {
         mViewHolder.mPrime4.setText(Integer.toString(prime4));
         mViewHolder.mPrime5.setText(Integer.toString(prime5));
         mViewHolder.mToFactor.setText(Integer.toString(toFactor));
+
+        // Enable buttons
+        mViewHolder.mPrime1.setEnabled(true);
+        mViewHolder.mPrime2.setEnabled(true);
+        mViewHolder.mPrime3.setEnabled(true);
+        mViewHolder.mPrime4.setEnabled(true);
+        mViewHolder.mPrime5.setEnabled(true);
     }
 
     private static int chooseNextPrime(
@@ -394,6 +448,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static class ViewHolder {
 
+        public final View mHelpBubble;
         public final TextView mLevel;
         public final Button mStart;
         public final ProgressBar mProgressBar;
@@ -410,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
         public final ImageView mBalloon3;
 
         public ViewHolder(Activity activity) {
+            mHelpBubble = activity.findViewById(R.id.help_bubble);
             mLevel = (TextView) activity.findViewById(R.id.textview_level);
             mStart = (Button) activity.findViewById(R.id.button_start);
             mProgressBar = (ProgressBar) activity.findViewById(R.id.progress_bar);
