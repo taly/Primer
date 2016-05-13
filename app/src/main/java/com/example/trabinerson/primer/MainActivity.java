@@ -105,6 +105,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
 
+            case R.id.action_help: {
+                setHelpVisibility(true);
+                return true;
+            }
+
             default: {
                 return super.onOptionsItemSelected(item);
             }
@@ -162,6 +167,14 @@ public class MainActivity extends AppCompatActivity {
         sendIntent.putExtra(Intent.EXTRA_TEXT, "Factor those primes! Check out Primer: http://play.google.com/store/apps/details?id=com.primer.game");
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
+    }
+
+    public void onHideHelp(View view) {
+        setHelpVisibility(false);
+    }
+
+    private void setHelpVisibility(boolean visible) {
+        findViewById(R.id.help_bubble).setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void finishLevel(boolean setStartButtonText) {

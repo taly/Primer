@@ -16,6 +16,8 @@
     <color name="startButtonStroke">#da4d07</color>
     <color name="startButtonTextColor">#2f221e</color>
 
+    <color name="helpBubbleColor">#a1bfad</color>
+
     <color name="timer1">#F97534</color>
 
 </resources>
