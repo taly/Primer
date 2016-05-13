@@ -183,6 +183,10 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        if (visible) {
+            mViewHolder.mLoseFrame.setVisibility(View.INVISIBLE);
+        }
+
         float fromX = visible ? 0 : 1;
         float toX = visible ? 1 : 0;
         float fromY = visible ? 0 : 1;

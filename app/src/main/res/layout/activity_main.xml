@@ -40,7 +40,6 @@
                 android:id="@+id/textview_level"
                 android:layout_gravity="center_horizontal" />
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -180,7 +179,7 @@
             android:background="@drawable/help_bubble"
             android:padding="8dp"
             android:visibility="invisible"
-            tools:visibility="visible">
+            tools:visibility="gone">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -193,6 +192,9 @@
             <TextView
                 style="@style/HelpBubbleText"
                 android:text="@string/help_p2"/>
+            <TextView
+                style="@style/HelpBubbleText"
+                android:text="@string/help_p3"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -210,20 +212,23 @@
             android:visibility="invisible">
 
             <ImageView
-                android:layout_width="373dp"
-                android:layout_height="373dp"
+                android:layout_width="350dp"
+                android:layout_height="350dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
                 android:id="@+id/imageView"
                 android:src="@drawable/grumpycat"
-                android:layout_gravity="center"
-                android:text="NO"/>
+                android:layout_gravity="center" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="YOU HAVE LOST."
+                android:text="@string/loss_text"
                 android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold"
                 android:textSize="30dp"
-                android:paddingBottom="40dp"
+                android:textColor="@color/lossColor"
+                android:paddingBottom="35dp"
                 android:layout_gravity="center_horizontal|bottom" />
 
         </FrameLayout>
