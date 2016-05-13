@@ -2,10 +2,14 @@ package com.example.trabinerson.primer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -82,6 +86,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationRepeat(Animation animation) { }
         };
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share: {
+                shareGame();
+                return true;
+            }
+
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
     }
 
     public void onPrimeClick(View view) {
@@ -127,6 +154,14 @@ public class MainActivity extends AppCompatActivity {
         mViewHolder.mStart.setVisibility(View.INVISIBLE);
         mViewHolder.mProgressBar.setVisibility(View.VISIBLE);
         startClock(LEVEL_TIME_MSECS);
+    }
+
+    private void shareGame() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Factor those primes! Check out Primer: http://play.google.com/store/apps/details?id=com.primer.game");
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 
     private void finishLevel(boolean setStartButtonText) {
