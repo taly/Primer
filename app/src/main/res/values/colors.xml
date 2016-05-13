@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#674C41</color>
+
+    <color name="background1">#fefcf0</color>
+    <color name="backround2">#FEEACF</color>
+    <color name="backroundStroke">#2f221e</color>
+
+    <color name="primeButton1">#FEF9E3</color>
+    <color name="primeButton2">#FEEACF</color>
+    <color name="primeButtonStroke">#F6B07D</color>
+    <color name="primeButtonTextColor">#674C41</color>
+
+    <color name="startButton1">#F97534</color>
+    <color name="startButton2">#fa905c</color>
+    <color name="startButtonStroke">#da4d07</color>
+    <color name="startButtonTextColor">#2f221e</color>
+
+    <color name="timer1">#F97534</color>
+
+</resources>

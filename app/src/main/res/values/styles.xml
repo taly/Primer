@@ -5,4 +5,14 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="PrimeButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/primeButtonTextColor</item>
+        <item name="android:background">@drawable/prime_button</item>
+        <item name="android:layout_marginBottom">3dp</item>
+    </style>
+
 </resources>
