@@ -11,4 +11,7 @@
           android:title="Share"
           android:icon="@android:drawable/ic_menu_share"
           app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_reset_high_score"
+        android:title="@string/action_reset_high_score"
+        app:showAsAction="never"/>
 </menu>

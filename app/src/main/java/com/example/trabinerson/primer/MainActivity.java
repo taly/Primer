@@ -3,6 +3,7 @@ package com.example.trabinerson.primer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
@@ -53,16 +54,13 @@ public class MainActivity extends AppCompatActivity {
         mLevelWinListener = new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                mViewHolder.mBalloon1.setVisibility(View.VISIBLE);
-                mViewHolder.mBalloon2.setVisibility(View.VISIBLE);
-                mViewHolder.mBalloon3.setVisibility(View.VISIBLE);
+                mViewHolder.setHighScoreTextVisibility(mCurrentLevel > getSavedHighestLevel());
+                mViewHolder.setBalloonsVisibility(true);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                mViewHolder.mBalloon1.setVisibility(View.GONE);
-                mViewHolder.mBalloon2.setVisibility(View.GONE);
-                mViewHolder.mBalloon3.setVisibility(View.GONE);
+                mViewHolder.setBalloonsVisibility(false);
             }
 
             @Override
@@ -87,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationRepeat(Animation animation) { }
         };
 
-        disablePrimeButtons();
+        mViewHolder.disablePrimeButtons();
+        mViewHolder.setHighScoreValue(getSavedHighestLevel());
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -113,10 +112,27 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
 
+            case R.id.action_reset_high_score: {
+                mViewHolder.setHighScoreValue(0);
+                setSavedHighestLevel(0);
+            }
+
             default: {
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    private void setSavedHighestLevel(int level) {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(getString(R.string.saved_high_score), level);
+        editor.commit();
+    }
+
+    private int getSavedHighestLevel() {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getInt(getString(R.string.saved_high_score), 0);
     }
 
     public void onPrimeClick(View view) {
@@ -229,21 +245,7 @@ public class MainActivity extends AppCompatActivity {
         mViewHolder.mProgressBar.setVisibility(View.INVISIBLE);
         mViewHolder.mProgressBar.setProgress(MAX_PROGRESS);
         mViewHolder.mToFactor.setText("");
-        disablePrimeButtons();
-    }
-
-    private void disablePrimeButtons() {
-        mViewHolder.mPrime1.setText("");
-        mViewHolder.mPrime2.setText("");
-        mViewHolder.mPrime3.setText("");
-        mViewHolder.mPrime4.setText("");
-        mViewHolder.mPrime5.setText("");
-
-        mViewHolder.mPrime1.setEnabled(false);
-        mViewHolder.mPrime2.setEnabled(false);
-        mViewHolder.mPrime3.setEnabled(false);
-        mViewHolder.mPrime4.setEnabled(false);
-        mViewHolder.mPrime5.setEnabled(false);
+        mViewHolder.disablePrimeButtons();
     }
 
     private void startClock(final long startTime) {
@@ -420,8 +422,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void winLevel() {
         mCountDownTimer.cancel();
-        finishLevel(true);
         animateWin();
+        if (mCurrentLevel > getSavedHighestLevel()) {
+            setSavedHighestLevel(mCurrentLevel);
+            mViewHolder.setHighScoreValue(mCurrentLevel);
+
+            float scale = 2f;
+            int duration = 1000;
+            final ScaleAnimation getSmallAnimation = new ScaleAnimation(scale, 1, scale, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            getSmallAnimation.setDuration(duration);
+
+            ScaleAnimation growAnimation = new ScaleAnimation(1, scale, 1, scale, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            growAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mViewHolder.mHighScoreValue.startAnimation(getSmallAnimation);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            growAnimation.setDuration(duration);
+//            growAnimation.setRepeatCount(3);
+
+            mViewHolder.mHighScoreValue.startAnimation(growAnimation);
+
+        }
+        finishLevel(true);
     }
 
     private void animateWin() {
@@ -464,9 +498,14 @@ public class MainActivity extends AppCompatActivity {
         public final Button mPrime5;
         public final TextView mToFactor;
         public final ImageView mError;
-        public final ImageView mBalloon1;
-        public final ImageView mBalloon2;
-        public final ImageView mBalloon3;
+        public final View mBalloon1;
+        public final View mBalloon2;
+        public final View mBalloon3;
+        public final TextView mHighScoreText1;
+        public final TextView mHighScoreText2;
+        public final TextView mHighScoreText3;
+        public final View mHighScore;
+        public final TextView mHighScoreValue;
 
         public ViewHolder(Activity activity) {
             mHelpBubble = activity.findViewById(R.id.help_bubble);
@@ -481,9 +520,57 @@ public class MainActivity extends AppCompatActivity {
             mPrime5 = (Button) activity.findViewById(R.id.prime5);
             mToFactor = (TextView) activity.findViewById(R.id.to_factor);
             mError = (ImageView) activity.findViewById(R.id.error_view);
-            mBalloon1 = (ImageView) activity.findViewById(R.id.ballon1);
-            mBalloon2 = (ImageView) activity.findViewById(R.id.ballon2);
-            mBalloon3 = (ImageView) activity.findViewById(R.id.ballon3);
+            mBalloon1 = activity.findViewById(R.id.ballon1);
+            mBalloon2 = activity.findViewById(R.id.ballon2);
+            mBalloon3 = activity.findViewById(R.id.ballon3);
+            mHighScoreText1 = (TextView) activity.findViewById(R.id.ballon1_text);
+            mHighScoreText2 = (TextView) activity.findViewById(R.id.ballon2_text);
+            mHighScoreText3 = (TextView) activity.findViewById(R.id.ballon3_text);
+            mHighScore = activity.findViewById(R.id.high_score);
+            mHighScoreValue = (TextView) activity.findViewById(R.id.high_score_value);
+        }
+
+        public void disablePrimeButtons() {
+            mPrime1.setText("");
+            mPrime2.setText("");
+            mPrime3.setText("");
+            mPrime4.setText("");
+            mPrime5.setText("");
+
+            mPrime1.setEnabled(false);
+            mPrime2.setEnabled(false);
+            mPrime3.setEnabled(false);
+            mPrime4.setEnabled(false);
+            mPrime5.setEnabled(false);
+        }
+
+        public void setBalloonsVisibility(boolean visible) {
+            setViewVisibility(mBalloon1, visible, true);
+            setViewVisibility(mBalloon2, visible, true);
+            setViewVisibility(mBalloon3, visible, true);
+        }
+
+        public void setHighScoreTextVisibility(boolean visible) {
+            setViewVisibility(mHighScoreText1, visible, false);
+            setViewVisibility(mHighScoreText2, visible, false);
+            setViewVisibility(mHighScoreText3, visible, false);
+        }
+
+        public void setHighScoreValue(int value) {
+            setViewVisibility(mHighScore, value > 0, false);
+            mHighScoreValue.setText(String.valueOf(value));
+        }
+
+        private void setViewVisibility(View view, boolean visible, boolean gone) {
+            int visibility;
+            if (visible) {
+                visibility = View.VISIBLE;
+            } else if (gone) {
+                visibility = View.GONE;
+            } else {
+                visibility = View.INVISIBLE;
+            }
+            view.setVisibility(visibility);
         }
     }
 }
