@@ -7,12 +7,19 @@
 
     <string name="saved_high_score" translatable="false">saved_high_score</string>
 
+    <string name="level_number">Level %d</string>
+    <string name="start_level_number">Start Level %d</string>
+    <string name="restart">Restart</string>
     <string name="help_title">How to Play</string>
-    <string name="help_p1">The number in the center is your target: you want it to be 1!</string>
+    <string name="help_p1">The number in the center is your target: get it down to 1!</string>
     <string name="help_p2">When you tap a prime number on the left, the target will be divided by that number.</string>
-    <string name="help_p3">If the target is not divisible by that prime, you will get a time penalty.</string>
+    <string name="help_p3">If the target is not divisible by that prime, you get a time penalty.</string>
     <string name="help_button">Got it</string>
     <string name="loss_text">YOU LOSE.</string>
+    <string name="balloon1">HIGHEST</string>
+    <string name="balloon2">LEVEL</string>
+    <string name="balloon3">EVAH!!1</string>
     <string name="high_score_text">H I G H E S T&#160;&#160;&#160;L E V E L&#160;&#160;&#160;E V A H :&#160;</string>
+    <string name="share_text">Factor those primes! Check out Primer: http://play.google.com/store/apps/details?id=com.example.trabinerson.primer</string>
 
 </resources>

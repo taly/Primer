@@ -180,6 +180,7 @@
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:layout_gravity="bottom"
+            android:paddingLeft="15dp"
             android:id="@+id/ballon1" >
             <ImageView
                 android:layout_width="80dp"
@@ -192,8 +193,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textColor="#000"
-                android:text="HIGHEST"
+                android:textColor="#f00"
+                android:text="@string/balloon1"
                 android:textSize="14sp"
                 android:paddingTop="35dp"
                 android:paddingLeft="5dp"/>
@@ -216,8 +217,8 @@
                 android:id="@+id/ballon2_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LEVEL"
-                android:textColor="#000"
+                android:text="@string/balloon2"
+                android:textColor="#0ff"
                 android:textStyle="bold"
                 android:textSize="24sp"
                 android:paddingTop="40dp"
@@ -240,11 +241,11 @@
                 android:id="@+id/ballon3_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000"
+                android:textColor="#0f0"
                 android:textStyle="bold"
-                android:text="EVA!!1"
-                android:textSize="20sp"
-                android:paddingTop="30dp"
+                android:text="@string/balloon3"
+                android:textSize="16sp"
+                android:paddingTop="35dp"
                 android:paddingLeft="10dp"/>
         </FrameLayout>
 

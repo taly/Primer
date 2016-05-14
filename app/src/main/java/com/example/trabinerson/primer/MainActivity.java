@@ -1,6 +1,5 @@
 package com.example.trabinerson.primer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,24 +17,16 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import com.example.trabinerson.primer.utils.AnimationHelper;
+import com.example.trabinerson.primer.utils.PrimeHelper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int[] PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23};
     private static final int MAX_PROGRESS = 100;
-    private static final int MAX_POSSIBLE_TO_FACTOR = 50000;
     private static final int PROGRESS_ERROR_PENALTY_PERCENT = 13;
     private static final int LEVEL_TIME_MSECS = 10000;
     private static final int LEVEL_INTERVAL_TIME_MSECS = 5;
-    private static final int FIRST_LARGE_PRIME = 13;
 
     private ViewHolder mViewHolder;
     private CountDownTimer mCountDownTimer;
@@ -170,21 +161,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStartClick(View view) {
-        setHelpVisibility(false);
-        mViewHolder.mToFactor.clearAnimation();
         mGameActive = true;
+        mViewHolder.mToFactor.clearAnimation();
+
+        // Visibilities
+        setHelpVisibility(false);
         mViewHolder.mLoseFrame.setVisibility(View.INVISIBLE);
-        mViewHolder.mLevel.setText("Level " + mCurrentLevel);
-        randomizeValues(mCurrentLevel);
         mViewHolder.mStart.setVisibility(View.INVISIBLE);
         mViewHolder.mProgressBar.setVisibility(View.VISIBLE);
+
+        // Texts
+        mViewHolder.mLevel.setText(getString(R.string.level_number, mCurrentLevel));
+
+        // Problem set
+        PrimeHelper.ProblemSet problemSet = PrimeHelper.randomizeProblemSet(mCurrentLevel);
+        mViewHolder.showProblemSet(problemSet);
+
+        // Clock
         startClock(LEVEL_TIME_MSECS);
     }
 
     private void shareGame() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "Factor those primes! Check out Primer: http://play.google.com/store/apps/details?id=com.primer.game");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         mCurrentLevel++;
         mViewHolder.mLevel.setText("");
         if (setStartButtonText) {
-            mViewHolder.mStart.setText("Start Level " + mCurrentLevel);
+            mViewHolder.mStart.setText(getString(R.string.start_level_number, mCurrentLevel));
         }
         mViewHolder.mStart.setVisibility(View.VISIBLE);
         mViewHolder.mProgressBar.setVisibility(View.INVISIBLE);
@@ -267,122 +267,6 @@ public class MainActivity extends AppCompatActivity {
         mCountDownTimer.start();
     }
 
-    private void randomizeValues(int level) {
-
-        int numPrimes = 5;
-
-        // Set max possible prime by level
-        int maxPrimeIndex = PRIMES.length - 1;
-        if (level <= PRIMES.length - numPrimes + 1) {
-            maxPrimeIndex = numPrimes + level - 2;
-        }
-
-        // Get ArrayList of primes - bah java
-        ArrayList<Integer> primes = new ArrayList<>(maxPrimeIndex + 1);
-        for (int i = 0; i <= maxPrimeIndex; i++) {
-            primes.add(i, PRIMES[i]);
-        }
-
-        // Randomize primes
-        Collections.shuffle(primes);
-        ArrayList<Integer> chosenPrimes = new ArrayList<>(numPrimes);
-        for (int k = 0; k < numPrimes; k++) {
-            chosenPrimes.add(k, primes.get(k));
-        }
-
-        // Make sure either 2 or 3 are chosen
-        int smallest;
-        Random random = new Random();
-        if (chosenPrimes.contains(2)) {
-            smallest = 2;
-        }
-        else if (chosenPrimes.contains(3)) {
-            smallest = 3;
-        }
-        else {
-            smallest = 2;
-            if (random.nextBoolean()) {
-                smallest++;
-            }
-            chosenPrimes.add(0, smallest);
-            chosenPrimes.remove(chosenPrimes.size() - 1);
-        }
-
-        // Choose primes to use for number
-        int numFactors = (int)(level / 2.) + 2;
-        ArrayList<Integer> participatingPrimes = new ArrayList<>(numFactors);
-        int numLargeChosen = 0;
-        int toFactor = 1;
-        for (int k = 0; k < numFactors; k++) {
-            int prime = chooseNextPrime(random, numPrimes, chosenPrimes, smallest, toFactor, level, numLargeChosen);
-            if (prime >= FIRST_LARGE_PRIME) {
-                numLargeChosen++;
-            }
-            participatingPrimes.add(k, prime);
-            toFactor *= prime;
-        }
-
-        // Set primes
-        Collections.sort(chosenPrimes);
-        int prime1 = chosenPrimes.get(0);
-        int prime2 = chosenPrimes.get(1);
-        int prime3 = chosenPrimes.get(2);
-        int prime4 = chosenPrimes.get(3);
-        int prime5 = chosenPrimes.get(4);
-
-        // Set values on screen
-        mViewHolder.mPrime1.setText(Integer.toString(prime1));
-        mViewHolder.mPrime2.setText(Integer.toString(prime2));
-        mViewHolder.mPrime3.setText(Integer.toString(prime3));
-        mViewHolder.mPrime4.setText(Integer.toString(prime4));
-        mViewHolder.mPrime5.setText(Integer.toString(prime5));
-        mViewHolder.mToFactor.setText(Integer.toString(toFactor));
-
-        // Enable buttons
-        mViewHolder.mPrime1.setEnabled(true);
-        mViewHolder.mPrime2.setEnabled(true);
-        mViewHolder.mPrime3.setEnabled(true);
-        mViewHolder.mPrime4.setEnabled(true);
-        mViewHolder.mPrime5.setEnabled(true);
-    }
-
-    private static int chooseNextPrime(
-            Random random, int numPrimes, ArrayList<Integer> chosenPrimes,
-            int smallest, int currentProduct, int level, int numLargeChosen) {
-
-        // Try to randomize a good prime
-        int maxTrials = 500;
-        int numTrials = 0;
-        int prime;
-        do {
-            int r = random.nextInt(numPrimes);
-            prime = chosenPrimes.get(r);
-            if (isPrimeKosher(prime, level, numLargeChosen, currentProduct)) {
-                return prime;
-            }
-            numTrials++;
-        }
-        while (numTrials < maxTrials);
-
-        // OK, all primes suck
-        return smallest;
-    }
-
-    private static boolean isPrimeKosher(int prime, int level, int numLargeChosen, int currentProduct) {
-        return !isPrimeTooLarge(prime, level, numLargeChosen) && !doesPrimeExceedMax(prime, currentProduct);
-    }
-
-    private static boolean isPrimeTooLarge(int prime, int level, int numLargeChosen) {
-        if (prime < FIRST_LARGE_PRIME) {
-            return false;
-        }
-        return (numLargeChosen > 0 && level < 10) || (numLargeChosen > 1 && level < 20);
-    }
-
-    private static boolean doesPrimeExceedMax(int prime, int currentProduct) {
-        return prime * currentProduct >= MAX_POSSIBLE_TO_FACTOR;
-    }
-
     private void animateError() {
         Animation scaleUp = new ScaleAnimation(1, 2, 1, 2, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         scaleUp.setDuration(250);
@@ -399,8 +283,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void animateLose() {
         int totalDuration = 1500;
-        Animation grumpyAnimation = new ScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        grumpyAnimation.setDuration(totalDuration);
+        Animation grumpyAnimation = AnimationHelper.getScaleAnimation(0, 1, totalDuration);
         grumpyAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -409,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                mViewHolder.mStart.setText("Restart");
+                mViewHolder.mStart.setText(getString(R.string.restart));
             }
 
             @Override
@@ -484,93 +367,4 @@ public class MainActivity extends AppCompatActivity {
         mViewHolder.mBalloon3.startAnimation(balloon3Animation);
     }
 
-    public static class ViewHolder {
-
-        public final View mHelpBubble;
-        public final TextView mLevel;
-        public final Button mStart;
-        public final ProgressBar mProgressBar;
-        public final FrameLayout mLoseFrame;
-        public final Button mPrime1;
-        public final Button mPrime2;
-        public final Button mPrime3;
-        public final Button mPrime4;
-        public final Button mPrime5;
-        public final TextView mToFactor;
-        public final ImageView mError;
-        public final View mBalloon1;
-        public final View mBalloon2;
-        public final View mBalloon3;
-        public final TextView mHighScoreText1;
-        public final TextView mHighScoreText2;
-        public final TextView mHighScoreText3;
-        public final View mHighScore;
-        public final TextView mHighScoreValue;
-
-        public ViewHolder(Activity activity) {
-            mHelpBubble = activity.findViewById(R.id.help_bubble);
-            mLevel = (TextView) activity.findViewById(R.id.textview_level);
-            mStart = (Button) activity.findViewById(R.id.button_start);
-            mProgressBar = (ProgressBar) activity.findViewById(R.id.progress_bar);
-            mLoseFrame = (FrameLayout) activity.findViewById(R.id.grumpy);
-            mPrime1 = (Button) activity.findViewById(R.id.prime1);
-            mPrime2 = (Button) activity.findViewById(R.id.prime2);
-            mPrime3 = (Button) activity.findViewById(R.id.prime3);
-            mPrime4 = (Button) activity.findViewById(R.id.prime4);
-            mPrime5 = (Button) activity.findViewById(R.id.prime5);
-            mToFactor = (TextView) activity.findViewById(R.id.to_factor);
-            mError = (ImageView) activity.findViewById(R.id.error_view);
-            mBalloon1 = activity.findViewById(R.id.ballon1);
-            mBalloon2 = activity.findViewById(R.id.ballon2);
-            mBalloon3 = activity.findViewById(R.id.ballon3);
-            mHighScoreText1 = (TextView) activity.findViewById(R.id.ballon1_text);
-            mHighScoreText2 = (TextView) activity.findViewById(R.id.ballon2_text);
-            mHighScoreText3 = (TextView) activity.findViewById(R.id.ballon3_text);
-            mHighScore = activity.findViewById(R.id.high_score);
-            mHighScoreValue = (TextView) activity.findViewById(R.id.high_score_value);
-        }
-
-        public void disablePrimeButtons() {
-            mPrime1.setText("");
-            mPrime2.setText("");
-            mPrime3.setText("");
-            mPrime4.setText("");
-            mPrime5.setText("");
-
-            mPrime1.setEnabled(false);
-            mPrime2.setEnabled(false);
-            mPrime3.setEnabled(false);
-            mPrime4.setEnabled(false);
-            mPrime5.setEnabled(false);
-        }
-
-        public void setBalloonsVisibility(boolean visible) {
-            setViewVisibility(mBalloon1, visible, true);
-            setViewVisibility(mBalloon2, visible, true);
-            setViewVisibility(mBalloon3, visible, true);
-        }
-
-        public void setHighScoreTextVisibility(boolean visible) {
-            setViewVisibility(mHighScoreText1, visible, false);
-            setViewVisibility(mHighScoreText2, visible, false);
-            setViewVisibility(mHighScoreText3, visible, false);
-        }
-
-        public void setHighScoreValue(int value) {
-            setViewVisibility(mHighScore, value > 0, false);
-            mHighScoreValue.setText(String.valueOf(value));
-        }
-
-        private void setViewVisibility(View view, boolean visible, boolean gone) {
-            int visibility;
-            if (visible) {
-                visibility = View.VISIBLE;
-            } else if (gone) {
-                visibility = View.GONE;
-            } else {
-                visibility = View.INVISIBLE;
-            }
-            view.setVisibility(visibility);
-        }
-    }
 }
