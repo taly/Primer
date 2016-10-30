@@ -18,8 +18,8 @@
     <string name="loss_text">YOU LOSE.</string>
     <string name="balloon1">HIGHEST</string>
     <string name="balloon2">LEVEL</string>
-    <string name="balloon3">EVAH!!1</string>
-    <string name="high_score_text">H I G H E S T&#160;&#160;&#160;L E V E L&#160;&#160;&#160;E V A H :&#160;</string>
+    <string name="balloon3">EVER!!!</string>
+    <string name="high_score_text">H I G H E S T&#160;&#160;&#160;L E V E L&#160;&#160;&#160;E V E R :&#160;</string>
     <string name="share_text">Factor those primes! Check out Primer: http://play.google.com/store/apps/details?id=com.example.trabinerson.primer</string>
 
 </resources>
