@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.example.trabinerson.primer"
+        applicationId "com.tafi.primer"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1

@@ -9,7 +9,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package com.example.trabinerson.primer.utils;
+package com.tafi.primer.utils;
 
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;

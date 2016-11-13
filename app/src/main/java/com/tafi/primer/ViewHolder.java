@@ -9,7 +9,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package com.example.trabinerson.primer;
+package com.tafi.primer;
 
 import android.app.Activity;
 import android.view.View;
@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.trabinerson.primer.utils.PrimeHelper;
+import com.tafi.primer.utils.PrimeHelper;
 
 /**
  * View holder for MainActivity.

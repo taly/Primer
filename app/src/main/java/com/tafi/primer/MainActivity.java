@@ -1,4 +1,4 @@
-package com.example.trabinerson.primer;
+package com.tafi.primer;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +18,8 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 
-import com.example.trabinerson.primer.utils.AnimationHelper;
-import com.example.trabinerson.primer.utils.PrimeHelper;
+import com.tafi.primer.utils.AnimationHelper;
+import com.tafi.primer.utils.PrimeHelper;
 
 public class MainActivity extends AppCompatActivity {
 
