@@ -289,16 +289,16 @@
             android:layout_height="wrap_content"
             android:id="@+id/grumpy"
             android:visibility="invisible"
+            android:paddingTop="20dp"
             android:layout_gravity="center_horizontal"
             >
 
             <ImageView
                 android:layout_width="350dp"
                 android:layout_height="350dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="15dp"
                 android:id="@+id/imageView"
-                android:src="@drawable/grumpycat"
+                android:paddingBottom="45dp"
+                android:src="@drawable/grumpy"
                 android:layout_gravity="center" />
 
             <TextView
@@ -307,9 +307,9 @@
                 android:text="@string/loss_text"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold"
-                android:textSize="30dp"
+                android:textSize="40dp"
+                android:paddingLeft="15dp"
                 android:textColor="@color/lossColor"
-                android:paddingBottom="35dp"
                 android:layout_gravity="center_horizontal|bottom" />
 
         </FrameLayout>
